@@ -33,12 +33,21 @@ module.exports = {
           .json({ message: "Email ou mot de passe incorrect." });
       }
 
-      const token = jwt.sign(user.data[0], process.env.SECRET_ACCESS_TOKEN, {
-        expiresIn: "1h",
-        algorithm: "HS256",
-      });
+      const { user_id: userId, role_id: roleId } = user.data[0];
 
-      response.status(200).json({ token: token });
+      const token = jwt.sign(
+        { userId, roleId },
+        process.env.SECRET_ACCESS_TOKEN,
+        {
+          expiresIn: "4h",
+          algorithm: "HS256",
+        }
+      );
+
+      response
+        .cookie("acces_token", token, { httpOnly: true })
+        .status(200)
+        .json({ token: token });
     } catch (error) {
       console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
       console.log(error);

@@ -7,6 +7,7 @@ const dotenv = require("../utils/dotenv.js").getEnvConfig(
 
 // Initialize global config
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const server = express();
 const globalRouter = require("../router/router.js");
 const morgan = require("morgan");
@@ -20,6 +21,7 @@ expressJsDocSwagger(server)(configSwagger);
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(morgan("tiny"));
+server.use(cookieParser());
 server.use(globalRouter);
 
 server.listen(process.env.SERVER_PORT, () => {
