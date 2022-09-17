@@ -1,4 +1,5 @@
 module.exports = {
+  $id: "#/definitions/recipe",
   type: "object",
   properties: {
     id: { type: "integer" },

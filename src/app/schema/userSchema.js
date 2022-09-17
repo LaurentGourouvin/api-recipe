@@ -1,4 +1,5 @@
 module.exports = {
+  $id: "#/definitions/user",
   type: "object",
   properties: {
     id: { type: "integer" },
