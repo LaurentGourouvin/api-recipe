@@ -33,7 +33,7 @@ module.exports = {
           .json({ message: "Email ou mot de passe incorrect." });
       }
 
-      const token = jwt.sign(user.data[0], process.env.SECRET_TOKEN, {
+      const token = jwt.sign(user.data[0], process.env.SECRET_ACCESS_TOKEN, {
         expiresIn: "1h",
         algorithm: "HS256",
       });
