@@ -16,7 +16,7 @@ module.exports = {
     };
     try {
       const resultCreateUser = await dbClient.query(queryCreateUser);
-      console.log(resultCreateUser.rows);
+      console.log(resultCreateUser);
       return resultCreateUser.rows;
     } catch (error) {
       console.log(error);
@@ -29,17 +29,25 @@ module.exports = {
         error.detail
       );
     }
-    // try {
-    //   const allUser = await dbClient.query(`SELECT * FROM "rec_user";`);
-    //   return allUser.rows;
-    // } catch (error) {
-    //   const pgError = ErrorMessage.getDetailsError(error.code);
-    //   throw new ModelError(
-    //     pgError.classError,
-    //     pgError.messageError,
-    //     error.code,
-    //     500
-    //   );
-    // }
+  },
+  async loginUser(user) {
+    const queryLoginUser = {
+      text: `SELECT * FROM "rec_user" WHERE user_email = $1 AND user_password = $2`,
+      values: [`${user.email}`, `${user.password}`],
+    };
+    try {
+      const resultLoginUser = await dbClient.query(queryLoginUser);
+      return { rowCount: resultLoginUser.rowCount, data: resultLoginUser.rows };
+    } catch (error) {
+      console.log(error);
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500,
+        error.detail
+      );
+    }
   },
 };

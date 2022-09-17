@@ -8,10 +8,11 @@ addFormats(ajv);
 const userSchema = require("./userSchema");
 const ingredientSchema = require("./ingredientSchema");
 const recipeSchema = require("./recipeSchema");
+const loginUserSchema = require("./loginUserSchema");
 
 ajv.addSchema(userSchema, "user");
-ajv.addSchema(recipeSchema);
-ajv.addSchema(ingredientSchema);
+ajv.addSchema(recipeSchema, "recipe");
+ajv.addSchema(ingredientSchema, "ingredient");
+ajv.addSchema(loginUserSchema, "login");
 
 module.exports = ajv;
-// module.exports = { validate_user, validate_recipe, validate_ingredient };
