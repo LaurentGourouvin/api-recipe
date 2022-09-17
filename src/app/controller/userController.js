@@ -11,9 +11,10 @@ module.exports = {
     } catch (error) {
       console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
       console.log(error);
-      response
-        .status(error.httpResponseStatusCode)
-        .json({ codeStatus: error.httpResponseStatusCode });
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
     }
   },
 };

@@ -9,8 +9,12 @@ module.exports = {
         return "System Error (errors external to PostgreSQL itself)";
         break;
 
+      case "23":
+        return "Integrity Constraint Violation";
+        break;
+
       default:
-        return "";
+        return "Classe d'erreur non répertoriée dans l'application";
         break;
     }
   },
@@ -24,8 +28,12 @@ module.exports = {
         return "syntax_error";
         break;
 
+      case "23505":
+        return "unique_violation";
+        break;
+
       default:
-        return "";
+        return "Erreur non répertoriée dans l'application";
         break;
     }
   },
