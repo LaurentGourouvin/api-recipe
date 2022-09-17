@@ -13,6 +13,10 @@ module.exports = {
         return "Integrity Constraint Violation";
         break;
 
+      case "08":
+        return "Connection Exception";
+        break;
+
       default:
         return "Classe d'erreur non répertoriée dans l'application";
         break;
@@ -32,8 +36,16 @@ module.exports = {
         return "unique_violation";
         break;
 
+      case "23505":
+        return "protocol_violation";
+        break;
+
+      case "08P01":
+        return "connection_protocol";
+        break;
+
       default:
-        return "Erreur non répertoriée dans l'application";
+        return "Code erreur non répertoriée dans l'application";
         break;
     }
   },
