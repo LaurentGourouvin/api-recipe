@@ -45,9 +45,27 @@ module.exports = {
       );
 
       response
-        .cookie("acces_token", token, { httpOnly: true })
+        .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json({ token: token });
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
+
+  async getCurrentUser(request, response) {
+    try {
+      const user = await authDataMapper.getCurrentUser({
+        id: request.userId,
+      });
+      if (user) {
+        response.status(200).json(user);
+      }
     } catch (error) {
       console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
       console.log(error);
