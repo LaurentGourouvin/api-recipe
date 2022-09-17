@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const authController = require("../controller/authController.js");
 const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
-
-// Il me faut une route pour s'inscrire et une pour se connecter à mon compte
+const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js");
 
 router
   .route("/register")
@@ -80,5 +79,9 @@ router
    *}
    */
   .post(middlewareValidationSchema("login"), authController.loginUser);
+
+router
+  .route("/getCurrentUser")
+  .post(middlewareAuthenticate, authController.getCurrentUser);
 
 module.exports = router;

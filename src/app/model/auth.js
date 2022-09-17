@@ -50,4 +50,24 @@ module.exports = {
       );
     }
   },
+  async getCurrentUser(user) {
+    const queryGetCurrentUser = {
+      text: `SELECT "user_firstname","user_lastname", "user_email" FROM "rec_user" WHERE user_id = $1`,
+      values: [user.id],
+    };
+    try {
+      const resultCurrentUser = await dbClient.query(queryGetCurrentUser);
+      return resultCurrentUser.rows[0];
+    } catch (error) {
+      console.log(error);
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500,
+        error.detail
+      );
+    }
+  },
 };
