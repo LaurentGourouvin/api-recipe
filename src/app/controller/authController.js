@@ -59,7 +59,6 @@ module.exports = {
   },
 
   async getCurrentUser(request, response) {
-    // recupérer l'userId et roleId de la requête
     try {
       const user = await authDataMapper.getCurrentUser({
         id: request.userId,

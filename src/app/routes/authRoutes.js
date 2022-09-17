@@ -82,6 +82,23 @@ router
 
 router
   .route("/getCurrentUser")
+  /**
+   * POST /api/auth/getCurrentUser
+   * @tags Authentification
+   * @summary Appelle API permettant récupérer les informations de l'utilisateur connecté
+   * @return {object} 200 - Informations de l'utilisateur obtenues
+   * @return {object} 404 - Token Invalide
+   * @example response - 200 - Informations de l'utilisateur
+   * {
+   *  "user_firstname": "John",
+   *  "user_lastname": "Doe",
+   *  "user_email": "john@doe.com"
+   * }
+   * @example response - 404 - Email ou mot de passe incorrect
+   * {
+   *  "message": "Token invalide pour accéder à ces informations."
+   * }
+   */
   .post(middlewareAuthenticate, authController.getCurrentUser);
 
 module.exports = router;
