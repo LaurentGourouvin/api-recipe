@@ -3,18 +3,43 @@ const ModelError = require("./ModelError");
 const ErrorMessage = require("./errorMessage");
 
 module.exports = {
-  async createUser() {
+  async createUser(user) {
+    // Mettre en place la partie chiffrement du mot de passe de l'utilisateur le plus rapidement possible
+    const queryCreateUser = {
+      text: `INSERT INTO "rec_user"("user_firstname", "user_lastname", "user_email","user_password") VALUES($1,$2,$3,$4) returning *;`,
+      values: [
+        `${user.firstname}`,
+        `${user.lastname}`,
+        `${user.email}`,
+        `${user.password}`,
+      ],
+    };
     try {
-      const allUser = await dbClient.query(`SELECT * FROM "rec_user";`);
-      return allUser.rows;
+      const resultCreateUser = await dbClient.query(queryCreateUser);
+      console.log(resultCreateUser.rows);
+      return resultCreateUser.rows;
     } catch (error) {
+      console.log(error);
       const pgError = ErrorMessage.getDetailsError(error.code);
       throw new ModelError(
         pgError.classError,
         pgError.messageError,
         error.code,
-        500
+        500,
+        error.detail
       );
     }
+    // try {
+    //   const allUser = await dbClient.query(`SELECT * FROM "rec_user";`);
+    //   return allUser.rows;
+    // } catch (error) {
+    //   const pgError = ErrorMessage.getDetailsError(error.code);
+    //   throw new ModelError(
+    //     pgError.classError,
+    //     pgError.messageError,
+    //     error.code,
+    //     500
+    //   );
+    // }
   },
 };

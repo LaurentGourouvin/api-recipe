@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const authController = require("../controller/authController.js");
+const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
 
 // Il me faut une route pour s'inscrire et une pour se connecter à mon compte
 
@@ -18,8 +19,30 @@ router
    * @summary Appelle API permettant de créer un nouvel utilisateur
    * @tags Authentification
    * @param {user} request.body.required - Le nouvel utilisateur à créer
+   * @return {object} 201 - Utilisateur crée
+   * @return {object} 400 - Non respect des formats à envoyer
+   * @return {object} 500 - Erreur lié au service d'inscription
+   * @example response - 201 - Utilisateur crée
+   * {
+   *  "message": "Utilisateur crée"
+   * }
+   * @example response - 400 - Non respect des formats à envoyer
+   * {
+   * "instancePath": "/email",
+   * "schemaPath": "#/properties/email/format",
+   * "keyword": "format",
+   * "params": {
+   * "format": "email"
+   *  },
+   * "message": "must match format \"email\""
+   *}
+   * @example response - 500 - Erreur lié au service d'inscription
+   * {
+   * "codeStatus": 500,
+   * "errorDescription": "Key (user_email)=(gourouvin.laurent@gmail.com) already exists."
+   * }
    * */
-  .post(authController.createUser);
+  .post(middlewareValidationSchema("user"), authController.createUser);
 
 //   .route("/login")
 //   /**
