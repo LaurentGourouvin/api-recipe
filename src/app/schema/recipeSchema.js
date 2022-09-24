@@ -3,13 +3,13 @@ module.exports = {
   type: "object",
   properties: {
     id: { type: "integer" },
-    title: { type: "string" },
+    name: { type: "string" },
     description: { type: "string" },
     image: { type: "string", format: "uri" },
     createdAt: { type: "string", format: "date-time" },
     updatedAt: { type: "string", format: "date-time" },
     userId: { type: "integer" },
   },
-  required: ["title", "description", "userId"],
+  required: ["name", "description"],
   additionalProperties: false,
 };
