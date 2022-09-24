@@ -24,23 +24,25 @@ const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js"
 router.route("/").get(recipeController.getAll);
 
 /**
- * GET /api/recipe/id/{idRecipe}
+ * GET /api/recipe/recipeById/{idRecipe}
  * @summary Obtenir une recette via son ID
  * @tags Recipe
  * @param {number}  idRecipe.path.required - ID de la recette
  * @return {object} 200 - Récupération de la recette
  * @return {object} 204 - Aucune recette récupérée
  *  */
-router.route("/id/:idRecipe").get(recipeController.getOneRecipeById);
+router.route("/recipeById/:idRecipe").get(recipeController.getOneRecipeById);
 /**
- * GET /api/recipe/userid/{userId}
+ * GET /api/recipe/recipeByUserId/{userId}
  * @summary Obtenir les recettes crées par une utilisateur
  * @tags Recipe
  * @param {number}  userId.path.required - ID de l'utilisateur
  * @return {object} 200 - Récupération des recettes
  * @return {object} 204 - Aucune recette récupérée
  *  */
-router.route("/userid/:idUser").get(recipeController.getRecipesByUserId);
+router
+  .route("/recipeByUserId/:idUser")
+  .get(recipeController.getRecipesByUserId);
 
 /**
  * POST /api/recipe/create
@@ -61,4 +63,29 @@ router
     recipeController.createRecipe
   );
 
+/**
+ * DELETE /api/recipe/delete
+ * @summary Supprimer une recette
+ * @tags Recipe
+ * @param {number} idRecipe.path.required - Id de la recette à supprimer
+ * @return {object} 200 - Récupération des recettes
+ * @return {object} 404 - Impossible de supprimer la recette
+ *  */
+router
+  .route("/delete")
+  .delete(middlewareAuthenticate, recipeController.deleteRecipe);
+
+/**
+ * PATCH /api/recipe/update
+ * @summary Mise à jour d'une recette
+ * @tags Recipe
+ * @param {string} name.request.body - Nom de la recette à modifier
+ * @param {string} description.request.body - Description de la recette
+ * @param {string} image.request.body - URI de l'image
+ * @return {object} 200 - Modification d'une recette effectuée
+ * @return {object} 404 - Impossible de modifier la recette
+ *  */
+router
+  .route("/update")
+  .patch(middlewareAuthenticate, recipeController.updateRecipe);
 module.exports = router;

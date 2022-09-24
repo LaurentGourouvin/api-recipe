@@ -10,6 +10,6 @@ module.exports = {
     updatedAt: { type: "string", format: "date-time" },
     userId: { type: "integer" },
   },
-  required: ["name", "description", "userId"],
+  required: ["name", "description"],
   additionalProperties: false,
 };

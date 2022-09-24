@@ -44,6 +44,14 @@ module.exports = {
         return "connection_protocol";
         break;
 
+      case "42703":
+        return "undefined_column";
+        break;
+
+      case "42P02":
+        return "undefined_parameter";
+        break;
+
       default:
         return "Code erreur non répertoriée dans l'application";
         break;

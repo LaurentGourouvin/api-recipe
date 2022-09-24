@@ -1,5 +1,6 @@
 const recipeDatamapper = require("../model/recipe.js");
 const path = require("path");
+const { info } = require("console");
 
 module.exports = {
   async getAll(_, response) {
@@ -17,6 +18,7 @@ module.exports = {
       });
     }
   },
+
   async getOneRecipeById(request, response) {
     const idRecipe = Number(request.params.idRecipe);
     try {
@@ -36,6 +38,7 @@ module.exports = {
       });
     }
   },
+
   async getRecipesByUserId(request, response) {
     const idUser = Number(request.params.idUser);
     try {
@@ -56,10 +59,10 @@ module.exports = {
       });
     }
   },
-  async createRecipe(request, response) {
-    console.log(request.body);
-    const { name, description, userId } = request.body;
 
+  async createRecipe(request, response) {
+    const { name, description } = request.body;
+    const userId = request.userId;
     try {
       const recipe = await recipeDatamapper.createRecipe(
         name,
@@ -70,6 +73,60 @@ module.exports = {
         return response.status(404).json({ message: "Recette non créee." });
       }
       response.status(201).json(recipe);
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
+
+  async deleteRecipe(request, response) {
+    const { recipeId } = request.body;
+    const userId = request.userId;
+
+    try {
+      const deleteRecipe = await recipeDatamapper.deleteRecipe(
+        recipeId,
+        userId
+      );
+
+      if (!deleteRecipe || deleteRecipe.length === 0) {
+        return response.status(404).json({ message: "Recette non supprimée." });
+      }
+      response.status(204).json(deleteRecipe);
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
+
+  async updateRecipe(request, response, next) {
+    const { recipeId } = request.body;
+    const userId = request.userId;
+    const recipe = {
+      name: request.body.name,
+      description: request.body.description,
+    };
+
+    try {
+      const updateRecipe = await recipeDatamapper.updateRecipe(
+        userId,
+        recipeId,
+        recipe
+      );
+
+      if (!updateRecipe) {
+        return response.status(404).json({ message: "Recette non modifiée" });
+      }
+
+      response.status(200).json(recipe);
     } catch (error) {
       console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
       console.log(error);
