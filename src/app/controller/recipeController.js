@@ -56,4 +56,27 @@ module.exports = {
       });
     }
   },
+  async createRecipe(request, response) {
+    console.log(request.body);
+    const { name, description, userId } = request.body;
+
+    try {
+      const recipe = await recipeDatamapper.createRecipe(
+        name,
+        description,
+        userId
+      );
+      if (!recipe) {
+        return response.status(404).json({ message: "Recette non créee." });
+      }
+      response.status(201).json(recipe);
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
 };

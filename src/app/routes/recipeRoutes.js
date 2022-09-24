@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const recipeController = require("../controller/recipeController.js");
+const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
+const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js");
 
 /**
  * Une recette est créee à l'aide de ces paramètres
@@ -39,5 +41,24 @@ router.route("/id/:idRecipe").get(recipeController.getOneRecipeById);
  * @return {object} 204 - Aucune recette récupérée
  *  */
 router.route("/userid/:idUser").get(recipeController.getRecipesByUserId);
+
+/**
+ * POST /api/recipe/create
+ * @summary Créer une nouvelle recette
+ * @tags Recipe
+ * @param {string} name.request.body.required - Nom de la recette
+ * @param {string} description.request.body.required - Description de la recette
+ * @param {string} image - Image cover de la recette
+ * @param {number} user_id.request.body.required - Id de l'utilisateur
+ * @return {object} 200 - Récupération des recettes
+ * @return {object} 204 - Aucune recette récupérée
+ *  */
+router
+  .route("/create")
+  .post(
+    middlewareAuthenticate,
+    middlewareValidationSchema("recipe"),
+    recipeController.createRecipe
+  );
 
 module.exports = router;

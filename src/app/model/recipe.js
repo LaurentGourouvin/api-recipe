@@ -60,4 +60,22 @@ module.exports = {
       );
     }
   },
+  async createRecipe(name, description, userId) {
+    const createQuery = {
+      text: `INSERT INTO "rec_recipe" ("recipe_name","recipe_description", "user_id") VALUES ($1, $2, $3) RETURNING * ;`,
+      values: [`${name}`, `${description}`, `${userId}`],
+    };
+    try {
+      const recipe = await dbClient.query(createQuery);
+      return recipe.rows[0];
+    } catch (error) {
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500
+      );
+    }
+  },
 };
