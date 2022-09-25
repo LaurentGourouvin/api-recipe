@@ -7,10 +7,11 @@ const dotenv = require("../utils/dotenv.js").getEnvConfig(
 const middlewareAuthenticate = (request, response, next) => {
   const token = request.cookies.access_token;
 
+  console.log("je passe de le middleware du token");
   if (!token) {
     return response
       .status(403)
-      .json({ message: "Token invalide pour accéder à ces informations" });
+      .json({ message: "Avez vous bien envoyé les credentials ?" });
   }
 
   try {
