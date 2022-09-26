@@ -1,6 +1,5 @@
 const recipeDatamapper = require("../model/recipe.js");
 const path = require("path");
-const { info } = require("console");
 
 module.exports = {
   async getAll(_, response) {
