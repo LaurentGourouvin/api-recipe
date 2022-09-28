@@ -11,6 +11,7 @@ const cookieParser = require("cookie-parser");
 const server = express();
 const globalRouter = require("../router/router.js");
 const morgan = require("morgan");
+const public = path.join(__dirname + "./../../public");
 
 // Initialize Swagger
 const expressJsDocSwagger = require("express-jsdoc-swagger");
@@ -18,6 +19,7 @@ const configSwagger = require("../config/config.swagger.js");
 
 expressJsDocSwagger(server)(configSwagger);
 
+server.use("/static", express.static(public));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(morgan("tiny"));

@@ -6,7 +6,7 @@ module.exports = {
   async getAll() {
     try {
       const allRecipe = await dbClient.query(
-        `SELECT  "recipe_id", "recipe_name", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname"
+        `SELECT  "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname"
         FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" ;`
       );
       return allRecipe.rows;
@@ -24,7 +24,7 @@ module.exports = {
   async getOneRecipeById(idRecipe) {
     try {
       const recipe = await dbClient.query(
-        `SELECT "recipe_id", "recipe_name", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
+        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
         FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" 
         WHERE "rec_recipe"."recipe_id" = ${idRecipe};`
       );
@@ -44,7 +44,7 @@ module.exports = {
   async getRecipesByUserId(userId) {
     try {
       const recipe = await dbClient.query(
-        `SELECT "recipe_id", "recipe_name", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
+        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
           FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" 
           WHERE "rec_recipe"."user_id" = ${userId};`
       );
@@ -63,7 +63,7 @@ module.exports = {
 
   async createRecipe(name, description, userId) {
     const createQuery = {
-      text: `INSERT INTO "rec_recipe" ("recipe_name","recipe_description", "user_id") VALUES ($1, $2, $3) RETURNING "recipe_id", "recipe_name", "recipe_description" ;`,
+      text: `INSERT INTO "rec_recipe" ("recipe_title","recipe_description", "user_id") VALUES ($1, $2, $3) RETURNING "recipe_id", "recipe_title", "recipe_description" ;`,
       values: [`${name}`, `${description}`, `${userId}`],
     };
     try {

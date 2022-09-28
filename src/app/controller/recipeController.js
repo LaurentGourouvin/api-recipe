@@ -135,4 +135,20 @@ module.exports = {
       });
     }
   },
+
+  async uploadImageTest(request, response) {
+    try {
+      console.log(request.body);
+      console.log(request.file);
+
+      response.status(200).json({ message: "test" });
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
 };

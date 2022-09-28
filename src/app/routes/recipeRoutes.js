@@ -3,13 +3,41 @@ const recipeController = require("../controller/recipeController.js");
 const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
 const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js");
 
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/recipe_images");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `${uniqueSuffix}_${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter(req, file, cb) {
+    const regex = /\.[a-z]*$/g;
+    const fileFilter = file.originalname.match(regex)[0];
+    if (
+      fileFilter === ".png" ||
+      fileFilter === ".jpg" ||
+      fileFilter === ".jpeg"
+    ) {
+      return cb(null, true);
+    }
+    return cb(new Error("Formats supportés : .png, .jpg and .jpeg "));
+  },
+});
+
 /**
  * Une recette est créee à l'aide de ces paramètres
  * @typedef {object} recipe
  * @property {number} id - Id de la recette
  * @property {string} name - Nom de la recette
  * @property {string} description - Description de la recette
- * @property {string} image - URI de l'image
+ * @property {string} files - URI de l'image - binary
  * @property {date} created_at - Date de création de la recette
  * @property {date} updated_at - Date de modification de la recette
  * @property {number} user_id - L'id de l'utilisateur qui a crée la recette
@@ -48,9 +76,11 @@ router
  * POST /api/recipe/create
  * @summary Créer une nouvelle recette
  * @tags Recipe
+ * @typedef {object} image
+ * @property {string} files - nouvelle image - binary
  * @param {string} name.request.body.required - Nom de la recette
  * @param {string} description.request.body.required - Description de la recette
- * @param {string} image - Image cover de la recette
+ * @param {image} image.request.body.required
  * @param {number} user_id.request.body.required - Id de l'utilisateur
  * @return {object} 200 - Récupération des recettes
  * @return {object} 204 - Aucune recette récupérée
@@ -60,6 +90,7 @@ router
   .post(
     middlewareAuthenticate,
     middlewareValidationSchema("recipe"),
+    upload.single("files"),
     recipeController.createRecipe
   );
 
@@ -88,4 +119,15 @@ router
 router
   .route("/update")
   .patch(middlewareAuthenticate, recipeController.updateRecipe);
+
+/**
+ * POST /api/recipe/uploadImage
+ * @summary Add new image
+ * @tags Images
+ * @param {addImage} request.body.required - ajouter nouvelle image - multipart/form-data
+ * @returns {object} 200 - Url of new image
+ */
+router
+  .route("/uploadImage")
+  .post(upload.single("files"), recipeController.uploadImageTest);
 module.exports = router;

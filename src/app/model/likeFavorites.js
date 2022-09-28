@@ -3,10 +3,12 @@ const ModelError = require("./ModelError");
 const ErrorMessage = require("./errorMessage");
 
 module.exports = {
+  // Créer une ligne dans la base de donnée
+  // Pour permettre une relation existante entre la recette et un utilisateur
   async createLikeFavorite(recipeId, userId) {
     const queryCreateLikeFavorite = {
       text: `INSERT INTO "rec_recipe_has_like_favorites" ("recipe_id", "user_id") VALUES ($1, $2)
-        RETURNING "like_favorites_id", "like_favorites_isFavorite", "like_favorites_isLike" ;`,
+        RETURNING "recipe_id", "user_id", "like_favorites_isFavorite", "like_favorites_isLike" ;`,
       values: [recipeId, userId],
     };
 
@@ -46,9 +48,10 @@ module.exports = {
     }
   },
 
+  // Récupère les favoris d'un utilisateur
   async getFavoritesRecipeByUserId(userId) {
     const queryFavoritesRecipe = {
-      text: `SELECT "rec_recipe"."recipe_id", "rec_recipe"."recipe_name" FROM "rec_recipe_has_like_favorites" 
+      text: `SELECT "rec_recipe"."recipe_id", "rec_recipe"."recipe_title" FROM "rec_recipe_has_like_favorites"
       INNER JOIN "rec_recipe" ON "rec_recipe"."recipe_id" = "rec_recipe_has_like_favorites"."recipe_id"
         WHERE "rec_recipe_has_like_favorites"."user_id" = $1 AND "rec_recipe_has_like_favorites"."like_favorites_isFavorite" = true;`,
       values: [userId],
@@ -58,6 +61,7 @@ module.exports = {
       const favoritesRecipe = await dbClient.query(queryFavoritesRecipe);
       return favoritesRecipe.rows;
     } catch (error) {
+      console.log(error);
       const pgError = ErrorMessage.getDetailsError(error.code);
       throw new ModelError(
         pgError.classError,
@@ -113,5 +117,3 @@ module.exports = {
     }
   },
 };
-
-// MODIFIER LA TABLE REC_HAS_LIKE_FAVORITES - FAIRE EN SORTE QUE L'ID RECIPE et L'ID USER DEVIENNENT LA CLE PRIMAIRE AFIN D'EVITER LES DOUBLONS
