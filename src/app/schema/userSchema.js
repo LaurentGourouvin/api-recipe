@@ -6,11 +6,12 @@ module.exports = {
     firstname: { type: "string" },
     lastname: { type: "string" },
     password: { type: "string" },
+    confirmPassword: { type: "string" },
     email: { type: "string", format: "email" },
     createdAt: { type: "string", format: "date-time" },
     updatedAt: { type: "string", format: "date-time" },
     roleId: { type: "integer" },
   },
-  required: ["firstname", "lastname", "password", "email"],
+  required: ["firstname", "lastname", "password", "email", "confirmPassword"],
   additionalProperties: false,
 };

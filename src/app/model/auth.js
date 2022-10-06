@@ -32,8 +32,8 @@ module.exports = {
   },
   async loginUser(user) {
     const queryLoginUser = {
-      text: `SELECT * FROM "rec_user" WHERE user_email = $1 AND user_password = $2`,
-      values: [`${user.email}`, `${user.password}`],
+      text: `SELECT * FROM "rec_user" WHERE user_email = $1;`,
+      values: [`${user.email}`],
     };
     try {
       const resultLoginUser = await dbClient.query(queryLoginUser);

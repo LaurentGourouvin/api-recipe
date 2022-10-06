@@ -101,4 +101,25 @@ router
    */
   .post(middlewareAuthenticate, authController.getCurrentUser);
 
+router
+  .route("/logout")
+  /**
+   * POST /api/auth/logout
+   * @tags Authentification
+   * @summary Appelle API permettant de savoir si l'utilisateur est déjà connecté
+   * @return {object} 200 - Informations de l'utilisateur obtenues
+   * @return {object} 404 - Token Invalide
+   * @example response - 200 - Informations de l'utilisateur
+   * {
+   *  "user_firstname": "John",
+   *  "user_lastname": "Doe",
+   *  "user_email": "john@doe.com"
+   * }
+   * @example response - 404 - Email ou mot de passe incorrect
+   * {
+   *  "message": "Token invalide pour accéder à ces informations."
+   * }
+   */
+  .post(middlewareAuthenticate, authController.logout);
+
 module.exports = router;
