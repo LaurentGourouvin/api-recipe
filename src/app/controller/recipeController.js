@@ -60,12 +60,18 @@ module.exports = {
   },
 
   async createRecipe(request, response) {
-    const { name, description } = request.body;
+    const { title, description } = request.body;
     const userId = request.userId;
+    console.log(request.body);
+    console.log(request.file.filename);
+    const imageLink =
+      "http://localhost:5050/static/recipe_images/" + request.file.filename;
+
     try {
       const recipe = await recipeDatamapper.createRecipe(
-        name,
+        title,
         description,
+        imageLink,
         userId
       );
       if (!recipe) {

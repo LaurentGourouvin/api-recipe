@@ -52,7 +52,7 @@ module.exports = {
   },
   async getCurrentUser(user) {
     const queryGetCurrentUser = {
-      text: `SELECT "user_firstname","user_lastname", "user_email" FROM "rec_user" WHERE user_id = $1`,
+      text: `SELECT "user_id","user_firstname","user_lastname", "user_email" FROM "rec_user" WHERE user_id = $1`,
       values: [user.id],
     };
     try {

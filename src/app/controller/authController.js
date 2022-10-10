@@ -55,7 +55,10 @@ module.exports = {
       );
 
       response
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 30,
+        })
         .status(200)
         .json({ token: token });
     } catch (error) {

@@ -3,11 +3,13 @@ const recipeController = require("../controller/recipeController.js");
 const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
 const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js");
 
+const path = require("path");
 const multer = require("multer");
+const public = path.join(__dirname + "./../../public/recipe_images/");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/recipe_images");
+    cb(null, public);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
@@ -23,11 +25,12 @@ const upload = multer({
     if (
       fileFilter === ".png" ||
       fileFilter === ".jpg" ||
+      fileFilter === ".webp" ||
       fileFilter === ".jpeg"
     ) {
       return cb(null, true);
     }
-    return cb(new Error("Formats supportés : .png, .jpg and .jpeg "));
+    return cb(new Error("Formats supportés : .png, .jpg, .webp et .jpeg "));
   },
 });
 
@@ -85,14 +88,12 @@ router
  * @return {object} 200 - Récupération des recettes
  * @return {object} 204 - Aucune recette récupérée
  *  */
-router
-  .route("/create")
-  .post(
-    middlewareAuthenticate,
-    middlewareValidationSchema("recipe"),
-    upload.single("files"),
-    recipeController.createRecipe
-  );
+router.route("/create").post(
+  middlewareAuthenticate,
+  //middlewareValidationSchema("recipe"),
+  upload.single("file"),
+  recipeController.createRecipe
+);
 
 /**
  * DELETE /api/recipe/delete
