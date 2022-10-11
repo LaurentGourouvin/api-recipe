@@ -104,7 +104,7 @@ router.route("/create").post(
  * @return {object} 404 - Impossible de supprimer la recette
  *  */
 router
-  .route("/delete")
+  .route("/delete/:recipeId")
   .delete(middlewareAuthenticate, recipeController.deleteRecipe);
 
 /**

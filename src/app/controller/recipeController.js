@@ -89,7 +89,7 @@ module.exports = {
   },
 
   async deleteRecipe(request, response) {
-    const { recipeId } = request.body;
+    const recipeId = Number(request.params.recipeId);
     const userId = request.userId;
 
     try {
@@ -98,6 +98,7 @@ module.exports = {
         userId
       );
 
+      console.log("reulstat deleteRecipe", deleteRecipe);
       if (!deleteRecipe || deleteRecipe.length === 0) {
         return response.status(404).json({ message: "Recette non supprimée." });
       }
