@@ -122,4 +122,5 @@ router
    */
   .post(middlewareAuthenticate, authController.logout);
 
+router.route("/update").put(middlewareAuthenticate, authController.updateUser);
 module.exports = router;

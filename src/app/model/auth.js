@@ -4,7 +4,6 @@ const ErrorMessage = require("./errorMessage");
 
 module.exports = {
   async createUser(user) {
-    // Mettre en place la partie chiffrement du mot de passe de l'utilisateur le plus rapidement possible
     const queryCreateUser = {
       text: `INSERT INTO "rec_user"("user_firstname", "user_lastname", "user_email","user_password") VALUES($1,$2,$3,$4) returning *;`,
       values: [
@@ -58,6 +57,28 @@ module.exports = {
     try {
       const resultCurrentUser = await dbClient.query(queryGetCurrentUser);
       return resultCurrentUser.rows[0];
+    } catch (error) {
+      console.log(error);
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500,
+        error.detail
+      );
+    }
+  },
+  async updateUser(user, id) {
+    const queryUpdateUser = {
+      text: `UPDATE "rec_user" SET "user_firstname" = $1, "user_lastname" = $2, "user_email" = $3 WHERE "user_id" = ${id} 
+      RETURNING "user_firstname", "user_lastname", "user_email";`,
+      values: [`${user.firstname}`, `${user.lastname}`, `${user.email}`],
+    };
+    try {
+      console.log("REQ SQL A EXEC", queryUpdateUser);
+      const resultUpdate = await dbClient.query(queryUpdateUser);
+      return resultUpdate.rows[0];
     } catch (error) {
       console.log(error);
       const pgError = ErrorMessage.getDetailsError(error.code);

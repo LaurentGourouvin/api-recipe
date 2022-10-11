@@ -103,4 +103,27 @@ module.exports = {
       });
     }
   },
+
+  async updateUser(request, response) {
+    try {
+      const resultUpdateUser = await authDataMapper.updateUser(
+        request.body,
+        request.userId
+      );
+
+      if (!resultUpdateUser)
+        return response
+          .status(404)
+          .json({ message: "Echec de la modification du profile !" });
+
+      return response.status(201).json(resultUpdateUser);
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
 };
