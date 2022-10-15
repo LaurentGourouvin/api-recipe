@@ -19,4 +19,14 @@ const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js"
  *  */
 router.route("/").get(ingredientsController.getAll);
 
+/**
+ *  GET /api/ingredient
+ * @summary Obtenir les ingédients d'une recette
+ * @tags Like and Favorite
+ * @param {number} recipeId.path.required
+ * @return {object} 200 - Récupération des informations concernant un like ou un favoris
+ * @return {object} 204 - Aucune information récupérée.
+ *  */
+router.route("/:idRecipe").get(ingredientsController.getIngredientByRecipeId);
+
 module.exports = router;

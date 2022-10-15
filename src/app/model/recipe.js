@@ -24,13 +24,17 @@ module.exports = {
   async getOneRecipeById(idRecipe) {
     try {
       const recipe = await dbClient.query(
-        `SELECT "recipe_id", "recipe_title", "recipe_description","recipe_duration","recipe_person","recipe_level", "recipe_image_large", "recipe_image_medium","recipe_image_small", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname", "rec_user"."user_id" 
-        FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" 
+        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_duration", "recipe_person", "recipe_level", "recipe_image_large", "recipe_image_medium",
+        "recipe_image_small", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname", "rec_user"."user_id"
+        FROM "rec_recipe"
+        INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id"
         WHERE "rec_recipe"."recipe_id" = ${idRecipe};`
       );
 
+      console.log(recipe.rows[0]);
       return recipe.rows[0];
     } catch (error) {
+      console.log(error);
       const pgError = ErrorMessage.getDetailsError(error.code);
       throw new ModelError(
         pgError.classError,

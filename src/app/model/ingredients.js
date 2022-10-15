@@ -24,7 +24,28 @@ module.exports = {
       );
     }
   },
-
+  async getIngredientByRecipeId(idRecipe) {
+    const queryGetIngredient = {
+      text: `SELECT "rec_recipe_has_ingredient"."recipe_has_ingredient_quantity", "rec_recipe_has_ingredient"."recipe_has_ingredient_unit", "rec_ingredient"."ingredient_name"
+        FROM "rec_recipe_has_ingredient" 
+        INNER JOIN "rec_ingredient" ON "rec_ingredient"."ingredient_id" = "rec_recipe_has_ingredient"."ingredient_id"
+        WHERE "rec_recipe_has_ingredient"."recipe_id" = $1 ;`,
+      values: [`${idRecipe}`],
+    };
+    try {
+      const resultGetIngredients = await dbClient.query(queryGetIngredient);
+      return resultGetIngredients.rows;
+    } catch (error) {
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500,
+        error.detail
+      );
+    }
+  },
   async addIngredientToRecipe(idRecipe, ingredientsList) {
     console.log(ingredientsList);
     const queryAddIngredients = {
