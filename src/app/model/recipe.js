@@ -6,7 +6,7 @@ module.exports = {
   async getAll() {
     try {
       const allRecipe = await dbClient.query(
-        `SELECT  "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname"
+        `SELECT  "recipe_id", "recipe_title", "recipe_description", "recipe_image_large", "recipe_image_medium","recipe_image_small","recipe_level", "recipe_duration","recipe_person","recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname"
         FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" ;`
       );
       return allRecipe.rows;
@@ -24,7 +24,7 @@ module.exports = {
   async getOneRecipeById(idRecipe) {
     try {
       const recipe = await dbClient.query(
-        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname", "rec_user"."user_id" 
+        `SELECT "recipe_id", "recipe_title", "recipe_description","recipe_duration","recipe_person","recipe_level", "recipe_image_large", "recipe_image_medium","recipe_image_small", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname", "rec_user"."user_id" 
         FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" 
         WHERE "rec_recipe"."recipe_id" = ${idRecipe};`
       );
@@ -44,7 +44,7 @@ module.exports = {
   async getRecipesByUserId(userId) {
     try {
       const recipe = await dbClient.query(
-        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_image", "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
+        `SELECT "recipe_id", "recipe_title", "recipe_description", "recipe_image_large", "recipe_image_medium","recipe_image_small","recipe_level","recipe_duration","recipe_person" "recipe_created_at", "recipe_updated_at", "user_firstname", "user_lastname" 
           FROM "rec_recipe" INNER JOIN "rec_user" ON "rec_recipe"."user_id" = "rec_user"."user_id" 
           WHERE "rec_recipe"."user_id" = ${userId};`
       );
@@ -61,10 +61,32 @@ module.exports = {
     }
   },
 
-  async createRecipe(name, description, image, userId) {
+  async createRecipe(
+    name,
+    description,
+    imageLarge,
+    imageMedium,
+    imageSmall,
+    duration,
+    person,
+    level,
+    userId
+  ) {
     const createQuery = {
-      text: `INSERT INTO "rec_recipe" ("recipe_title","recipe_description","recipe_image","user_id") VALUES ($1, $2, $3,$4) RETURNING "recipe_id", "recipe_title", "recipe_description" ;`,
-      values: [`${name}`, `${description}`, `${image}`, `${userId}`],
+      text: `INSERT INTO "rec_recipe" ("recipe_title","recipe_description","recipe_image_large","recipe_image_medium","recipe_image_small", "recipe_duration",
+      "recipe_person", "recipe_level","user_id") 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "recipe_id", "recipe_title", "recipe_description" ;`,
+      values: [
+        `${name}`,
+        `${description}`,
+        `${imageLarge}`,
+        `${imageMedium}`,
+        `${imageSmall}`,
+        `${Number(duration)}`,
+        `${Number(person)}`,
+        `${level}`,
+        `${userId}`,
+      ],
     };
     try {
       const recipe = await dbClient.query(createQuery);

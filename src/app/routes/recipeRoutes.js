@@ -2,20 +2,27 @@ const router = require("express").Router();
 const recipeController = require("../controller/recipeController.js");
 const middlewareValidationSchema = require("../middleware/middlewareValidationSchema.js");
 const middlewareAuthenticate = require("../middleware/middlewareAuthenticate.js");
+const middlewareSharp = require("../middleware/middlewareSharp.js");
 
 const path = require("path");
 const multer = require("multer");
 const public = path.join(__dirname + "./../../public/recipe_images/");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, public);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${uniqueSuffix}_${file.originalname}`);
-  },
-});
+// Fonctionne pour l'upload d'une image modification de taille ou d'extension
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // j'indique où stocker mon image
+//     cb(null, public);
+//   },
+//   filename: (req, file, cb) => {
+//     // Je génére un suffixe correspondant à Date.now()
+//     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+//     // Je retourne une callback contenant le suffixe généré concaténé au nom original du fichier
+//     cb(null, `${uniqueSuffix}_${file.originalname}`);
+//   },
+// });
+
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -88,12 +95,15 @@ router
  * @return {object} 200 - Récupération des recettes
  * @return {object} 204 - Aucune recette récupérée
  *  */
-router.route("/create").post(
-  middlewareAuthenticate,
-  //middlewareValidationSchema("recipe"),
-  upload.single("file"),
-  recipeController.createRecipe
-);
+router
+  .route("/create")
+  .post(
+    middlewareAuthenticate,
+    upload.single("file"),
+    middlewareSharp,
+    middlewareValidationSchema("recipe"),
+    recipeController.createRecipe
+  );
 
 /**
  * DELETE /api/recipe/delete

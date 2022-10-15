@@ -8,7 +8,8 @@ module.exports = {
   async createLikeFavorite(request, response) {
     const { recipeId } = request.body;
     const userId = request.userId;
-
+    console.log("Je suis dans createLikeFavorite");
+    console.log(request.body);
     try {
       const createLikeFavorite =
         await likeFavoritesDatamapper.createLikeFavorite(recipeId, userId);

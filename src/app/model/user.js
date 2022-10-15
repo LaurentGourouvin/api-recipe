@@ -17,4 +17,20 @@ module.exports = {
       );
     }
   },
+  async getAllIdUser() {
+    try {
+      const allIdUser = await dbClient.query(
+        `SELECT "user_id" from "rec_user";`
+      );
+      return allIdUser.rows;
+    } catch (error) {
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500
+      );
+    }
+  },
 };

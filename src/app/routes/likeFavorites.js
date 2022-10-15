@@ -52,11 +52,11 @@ router
  * @return {object} 204 - La création d'une relation entre l'utilisateur et la recette (like, favoris) n'a pas été effectuée
  */
 router
-  .route("/")
+  .route("/favorites")
   .post(middlewareAuthenticate, likeFavoritesController.createLikeFavorite);
 
 /**
- * PATCH /api/likeFavorites/updateFavorite
+ * PUT /api/likeFavorites/updateFavorite
  * @summary Modifier un favoris d'un utilisateur par rapport à une recette
  * @tags Favorite
  * @param {number} recipeId.path.required - ID de la recette
@@ -65,13 +65,13 @@ router
  */
 router
   .route("/updateFavorite")
-  .patch(
+  .put(
     middlewareAuthenticate,
     likeFavoritesController.updateFavoritesByUserIdAndRecipeId
   );
 
 /**
- * PATCH /api/likeFavorites/updateLike
+ * PUT /api/likeFavorites/updateLike
  * @summary Modifier un like d'un utilisateur par rapport à une recette
  * @tags Like
  * @param {number} recipeId.path.required - ID de la recette
@@ -80,8 +80,9 @@ router
  */
 router
   .route("/updateLike")
-  .patch(
+  .put(
     middlewareAuthenticate,
     likeFavoritesController.updateLikeByUserIdAndRecipeId
   );
+
 module.exports = router;

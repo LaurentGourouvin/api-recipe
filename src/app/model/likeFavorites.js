@@ -51,7 +51,8 @@ module.exports = {
   // Récupère les favoris d'un utilisateur
   async getFavoritesRecipeByUserId(userId) {
     const queryFavoritesRecipe = {
-      text: `SELECT "rec_recipe"."recipe_id", "rec_recipe"."recipe_title" FROM "rec_recipe_has_like_favorites"
+      text: `SELECT "rec_recipe"."recipe_id", "rec_recipe"."recipe_title", "rec_recipe"."recipe_image_large", "rec_recipe"."recipe_image_medium","rec_recipe"."recipe_image_small","rec_recipe"."recipe_duration" , "rec_recipe"."recipe_person", "rec_recipe"."recipe_level"
+      FROM "rec_recipe_has_like_favorites"
       INNER JOIN "rec_recipe" ON "rec_recipe"."recipe_id" = "rec_recipe_has_like_favorites"."recipe_id"
         WHERE "rec_recipe_has_like_favorites"."user_id" = $1 AND "rec_recipe_has_like_favorites"."like_favorites_isFavorite" = true;`,
       values: [userId],
