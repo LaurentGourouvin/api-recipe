@@ -42,7 +42,17 @@ router
     middlewareAuthenticate,
     likeFavoritesController.getFavoritesRecipeByUserId
   );
-
+/**
+ *  GET /api/likeFavorites/favorites/{userId}
+ * @summary Obtenir les likes d'un utilisateur
+ * @tags  Favorite
+ * @param {number} userId.path.required - Id de l'utilisateur
+ * @return {object} 200 - Récupération de la liste des favoris
+ * @return {object} 204 - L'utilisateur n'a pas encore enregistré de favoris
+ */
+router
+  .route("/likes/:userId")
+  .get(middlewareAuthenticate, likeFavoritesController.getLikesRecipeByUserId);
 /**
  * POST /api/likeFavorites/
  * @summary Initalise un like et un favoris à false pour un utilisateur par rapport à une recette

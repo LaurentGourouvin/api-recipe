@@ -73,6 +73,31 @@ module.exports = {
     }
   },
 
+  // Récupère les like d'un utilisateur
+  async getLikesRecipeByUserId(userId) {
+    const queryLikesRecipe = {
+      text: `SELECT "rec_recipe"."recipe_id", "rec_recipe"."recipe_title", "rec_recipe"."recipe_image_large", "rec_recipe"."recipe_image_medium","rec_recipe"."recipe_image_small","rec_recipe"."recipe_duration" , "rec_recipe"."recipe_person", "rec_recipe"."recipe_level"
+      FROM "rec_recipe_has_like_favorites"
+      INNER JOIN "rec_recipe" ON "rec_recipe"."recipe_id" = "rec_recipe_has_like_favorites"."recipe_id"
+        WHERE "rec_recipe_has_like_favorites"."user_id" = $1 AND "rec_recipe_has_like_favorites"."like_favorites_isLike" = true;`,
+      values: [userId],
+    };
+
+    try {
+      const favoritesRecipe = await dbClient.query(queryLikesRecipe);
+      return favoritesRecipe.rows;
+    } catch (error) {
+      console.log(error);
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500
+      );
+    }
+  },
+
   async updateFavoritesByUserIdAndRecipeId(isFavorite, recipeId, userId) {
     const queryUpdateFavorite = {
       text: `UPDATE "rec_recipe_has_like_favorites"

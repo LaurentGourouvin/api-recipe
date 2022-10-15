@@ -89,6 +89,30 @@ module.exports = {
     }
   },
 
+  async getLikesRecipeByUserId(request, response) {
+    // const userId = request.userId;
+    const userId = Number(request.params.userId);
+
+    try {
+      const favoritesRecipes =
+        await likeFavoritesDatamapper.getLikesRecipeByUserId(userId);
+      if (!favoritesRecipes || favoritesRecipes.length === 0) {
+        return response
+          .status(204)
+          .json({ message: "L'utilisateur n'as pas de recette en favoris." });
+      }
+
+      return response.status(200).json(favoritesRecipes);
+    } catch (error) {
+      console.log(`🔴 Erreur dans ${path.basename(__filename)} 🔴`);
+      console.log(error);
+      response.status(error.httpResponseStatusCode).json({
+        codeStatus: error.httpResponseStatusCode,
+        errorDescription: error?.detail,
+      });
+    }
+  },
+
   async updateFavoritesByUserIdAndRecipeId(request, response) {
     const { recipeId, isFavorite } = request.body;
     const userId = request.userId;
