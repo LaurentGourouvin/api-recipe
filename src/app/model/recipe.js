@@ -31,7 +31,6 @@ module.exports = {
         WHERE "rec_recipe"."recipe_id" = ${idRecipe};`
       );
 
-      console.log(recipe.rows[0]);
       return recipe.rows[0];
     } catch (error) {
       console.log(error);
@@ -65,6 +64,28 @@ module.exports = {
     }
   },
 
+  async getRecipeByName(recipeName) {
+    const querySearchRecipe = {
+      text: `SELECT "recipe_id", "recipe_title", "recipe_image_large", "recipe_image_medium","recipe_image_small","recipe_level","recipe_duration","recipe_person" ,"recipe_created_at", "recipe_updated_at"
+      FROM "rec_recipe"
+      WHERE "rec_recipe"."recipe_title" ILIKE $1 ;`,
+      values: [`%${recipeName}%`],
+    };
+
+    try {
+      const resultSearchRecipe = await dbClient.query(querySearchRecipe);
+
+      return resultSearchRecipe.rows;
+    } catch (error) {
+      const pgError = ErrorMessage.getDetailsError(error.code);
+      throw new ModelError(
+        pgError.classError,
+        pgError.messageError,
+        error.code,
+        500
+      );
+    }
+  },
   async createRecipe(
     name,
     description,

@@ -9,7 +9,6 @@ module.exports = {
       values: "",
     };
     try {
-      console.log("REQ SQL A EXEC", queryGetAllIngredients);
       const resultUpdate = await dbClient.query(queryGetAllIngredients);
       return resultUpdate.rows;
     } catch (error) {
@@ -26,7 +25,7 @@ module.exports = {
   },
   async getIngredientByRecipeId(idRecipe) {
     const queryGetIngredient = {
-      text: `SELECT "rec_recipe_has_ingredient"."recipe_has_ingredient_quantity", "rec_recipe_has_ingredient"."recipe_has_ingredient_unit", "rec_ingredient"."ingredient_name"
+      text: `SELECT "rec_recipe_has_ingredient"."recipe_has_ingredient_quantity", "rec_recipe_has_ingredient"."recipe_has_ingredient_unit", "rec_ingredient"."ingredient_name", "rec_ingredient"."ingredient_id"
         FROM "rec_recipe_has_ingredient" 
         INNER JOIN "rec_ingredient" ON "rec_ingredient"."ingredient_id" = "rec_recipe_has_ingredient"."ingredient_id"
         WHERE "rec_recipe_has_ingredient"."recipe_id" = $1 ;`,
@@ -47,7 +46,6 @@ module.exports = {
     }
   },
   async addIngredientToRecipe(idRecipe, ingredientsList) {
-    console.log(ingredientsList);
     const queryAddIngredients = {
       text: `INSERT INTO "rec_recipe_has_ingredient" ("recipe_has_ingredient_quantity", "recipe_has_ingredient_unit", "recipe_id","ingredient_id")
       VALUES ($1,$2,$3,$4) returning *`,

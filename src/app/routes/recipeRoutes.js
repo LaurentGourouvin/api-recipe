@@ -132,6 +132,16 @@ router
   .patch(middlewareAuthenticate, recipeController.updateRecipe);
 
 /**
+ * GET /api/recipe/{nameRecipe}
+ * @summary Recherche d'une recette
+ * @tags Recipe
+ * @param {string} name.request.body - Nom de la recette à modifier
+ * @return {object} 200 - Une/Plusieurs recette correspondent à la recherche
+ * @return {object} 404 - Impossible de modifier la recette
+ *  */
+router.route("/:search").get(recipeController.findRecipeByName);
+
+/**
  * POST /api/recipe/uploadImage
  * @summary Add new image
  * @tags Images
